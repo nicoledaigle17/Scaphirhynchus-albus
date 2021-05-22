@@ -51,7 +51,7 @@ function [prdData, info] = predict_Scaphirhynchus_albus(par, data, auxData)
   pars_tpm = [g_m k l_T v_Hb v_Hpm];
   [tau_pm, tau_bm] = get_tp(pars_tpm, f);
   tT_pm = (tau_pm - tau_bm)/ k_M/ TC_tpm;
-
+  
   % pack to output
   prdData.ab = aT_b;
   prdData.tp = tT_p;
@@ -74,9 +74,11 @@ function [prdData, info] = predict_Scaphirhynchus_albus(par, data, auxData)
   L    = L_im - (L_im - L_b) * exp(- rT_Bm * tWw_m(:,1)); % cm, structural length
   EWw_m  = L.^3 * (1 + f * w_m); % g, wet weight
   ELw_m  = L/ del_M; % cm, total length
-
-  
+  %
   ELW  = (LW(:,1) * del_M).^3 * (1 + f * ome); % g, wet weight
+  %
+  ELW2  = (LW2(:,1) * del_M).^3 * (1 + f * ome); % g, wet weight
+
 
   % pack to output
   prdData.tWw = EWw;
@@ -84,4 +86,5 @@ function [prdData, info] = predict_Scaphirhynchus_albus(par, data, auxData)
   prdData.tL = ELw;
   prdData.tL_m = ELw_m;
   prdData.LW = ELW;
+  prdData.LW2 = ELW2;
      

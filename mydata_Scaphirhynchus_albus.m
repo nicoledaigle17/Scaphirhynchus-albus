@@ -138,10 +138,36 @@ data.tWw_m(:,2) = data.tWw_m(:,2) * 1e3; % convert kg to g
  units.tWw_m = {'d', 'g'};     label.tWw_m = {'time since birth', 'wet weight'};  bibkey.tWw_m = 'KeenJenk1993';
    temp.tWw_m = C2K(13);  units.temp.tWw_m = 'K'; label.temp.tWw_m = 'temperature'; comment.tWw_m = 'males, temp guessed'; 
    
+data.LW2 = [ ... % fork length (mm), wet weight (g), from Shuman's regression
+200	  20.9726
+300	  79.7179
+400	  205.591
+500	  428.695
+600	  781.462
+700	  1298.31
+800	  2015.38
+900	  2970.38
+1000  4202.43
+1100  5751.94
+1200  7660.55
+1300  9970.99
+1400  12727.1
+1500  15973.6
+1600  19756.4];
+data.LW2(:,1) = data.LW2(:,1)/10; % convert mm to cm
+ units.LW2 = {'cm', 'g'};     label.LW2 = {'fork length', 'wet weight'};  bibkey.LW2 = 'Shumanetal2011';
+   temp.LW2 = C2K(13);  units.temp.LW2 = 'K'; label.temp.LW2 = 'temperature'; comment.LW2 = 'temp is guessed (metadata from field collections)';
+  
    
 %% set weights for all real data
 weights = setweights(data, []);
 weights.Wwi = 0 * weights.Wwi;
+weights.tL = 5 * weights.tL;
+weights.tWw_m = 5 * weights.tWw_m;
+weights.tL_m = 5 * weights.tL_m;
+weights.tWw = 5 * weights.tWw;
+weights.LW2 = 5 * weights.LW2;
+weights.LW = 5 * weights.LW;
 
 %% set pseudodata and respective weights
 [data, units, label, weights] = addpseudodata(data, units, label, weights);
@@ -158,12 +184,13 @@ txtData.comment = comment;
 %% Group plots
 set1 = {'tL','tL_m'}; comment1 = {'Data for females, males'};
 set2 = {'tWw','tWw_m'}; comment2 = {'Data for females, males'};
-metaData.grp.sets = {set1,set2};
-metaData.grp.comment = {comment1,comment2};
+set3 = {'LW','LW2'}; comment3 = {'Data from KeenMax1993, Shumanetal2011'};
+metaData.grp.sets = {set1,set2,set3};
+metaData.grp.comment = {comment1,comment2,comment3};
 
 %% Discussion points
 D1 = 'Wwi = 130 kg was ignored, becasue of inconsistency with Li and LW data; probably includes gonads';
-metaData.discussion = struct('D1', D1);
+metaData.discussion = struct('D1', D1); 
 
 %% Facts
 F1 = 'The pallid sturgeon is the largest freshwater fish in North America';
@@ -218,4 +245,15 @@ bibkey = 'GeorSlac2012'; type = 'Article'; bib = [ ...
 'number = {}, ' ...
 'doi = {10.1111/j.1439-0426.2011.01931.x},' ...
 'pages = {1--4}']; 
+metaData.biblist.(bibkey) = ['''@', type, '{', bibkey, ', ' bib, '}'';'];
+%
+bibkey = 'Shumanetal2011'; type = 'Article'; bib = [ ...    
+'author = {D.A. Shuman and R.A. Klumb and R.H. Wilson and M.E. Jaeger and T. Haddix and W.M. Gardner and W.J. Doyle and P.T. Horner and M. Ruggles and K.D. Steffensen and S. Stukel and G.A. Wanner}, ' ...
+'year  = {2011}, ' ...
+'title = {Pallid sturgeon size structure, condition, and growth in the Missouri River Basin}, ' ...  
+'journal = {Journal of Applied Ichthyology}, ' ...
+'volume = {27}, ' ...
+'number = {}, ' ...
+'doi = {10.1111/j.1439-0426.2010.01645.x},' ...
+'pages = {269--281}']; 
 metaData.biblist.(bibkey) = ['''@', type, '{', bibkey, ', ' bib, '}'';'];
